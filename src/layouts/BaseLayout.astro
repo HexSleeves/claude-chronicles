@@ -76,7 +76,7 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
             aria-label="Source on GitHub"
             title="Source on GitHub"
           >
-            <GitHubMark size={20} />
+            <GitHubMark size={20} decorative />
           </a>
         </nav>
       </div>
@@ -168,7 +168,8 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
       .nav__icon svg {
         transition: filter var(--dur-fast) var(--ease-out);
       }
-      .nav__icon:hover svg {
+      .nav__icon:hover svg,
+      .nav__icon:focus-visible svg {
         filter: drop-shadow(0 0 6px rgb(var(--ember-rgb) / 0.6));
       }
 
