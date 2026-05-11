@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ConversationLayout from "../../layouts/ConversationLayout.astro";
+
+export async function getStaticPaths() {
+  const all = await getCollection("conversations", ({ data }) => !data.draft);
+  return all.map((entry) => ({
+    params: { slug: entry.id.replace(/\.mdx$/, "") },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"conversations">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<ConversationLayout entry={entry}>
+  <Content />
+</ConversationLayout>

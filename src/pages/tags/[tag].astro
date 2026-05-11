@@ -1,0 +1,63 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ConversationCard from "../../components/ConversationCard.astro";
+
+export async function getStaticPaths() {
+  const all = await getCollection("conversations", ({ data }) => !data.draft);
+  const byTag = new Map<string, typeof all>();
+  for (const entry of all) {
+    for (const tag of entry.data.tags) {
+      const arr = byTag.get(tag);
+      if (arr) arr.push(entry);
+      else byTag.set(tag, [entry]);
+    }
+  }
+  return Array.from(byTag.entries()).map(([tag, entries]) => ({
+    params: { tag },
+    props: { tag, entries: entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()) },
+  }));
+}
+
+const { tag, entries } = Astro.props;
+---
+<BaseLayout title={`#${tag}`} description={`Conversations tagged #${tag}.`}>
+  <section class="tag container container--wide">
+    <header class="tag__head">
+      <p class="tag__eyebrow">tag</p>
+      <h1>#{tag}</h1>
+      <p class="tag__count">{entries.length} {entries.length === 1 ? "log" : "logs"}.</p>
+    </header>
+
+    <div class="tag__grid">
+      {entries.map((e) => <ConversationCard entry={e} />)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tag { padding-block: 3.5rem 6rem; }
+  .tag__eyebrow {
+    color: var(--flame-400);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-size: var(--fs-xs);
+    margin-bottom: 0.6rem;
+  }
+  .tag__head { margin-bottom: 2.5rem; }
+  .tag__head h1 {
+    font-size: var(--fs-3xl);
+    color: var(--flame-400);
+    margin-bottom: 0.3rem;
+  }
+  .tag__count { color: var(--ink-muted); font-size: var(--fs-sm); margin: 0; }
+  .tag__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) {
+    .tag__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ConversationCard from "../../components/ConversationCard.astro";
+
+const all = (await getCollection("conversations", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+// Group by Year-Month label, preserving sort order.
+const monthLabel = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long" });
+
+const groups = new Map<string, typeof all>();
+for (const entry of all) {
+  const key = monthLabel(entry.data.date);
+  const arr = groups.get(key);
+  if (arr) arr.push(entry);
+  else groups.set(key, [entry]);
+}
+---
+<BaseLayout title="archive" description="Every wild conversation, sorted by month.">
+  <section class="archive container container--wide">
+    <header class="archive__head">
+      <p class="archive__eyebrow">archive</p>
+      <h1>Every conversation, in order of combustion.</h1>
+      <p class="archive__count">{all.length} {all.length === 1 ? "log" : "logs"}.</p>
+    </header>
+
+    {Array.from(groups.entries()).map(([label, entries]) => (
+      <section class="archive__group" aria-labelledby={`group-${label.replace(/\s+/g, "-")}`}>
+        <h2 id={`group-${label.replace(/\s+/g, "-")}`} class="archive__month">
+          {label}
+        </h2>
+        <div class="archive__grid">
+          {entries.map((e) => <ConversationCard entry={e} />)}
+        </div>
+      </section>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .archive { padding-block: 3.5rem 6rem; }
+  .archive__eyebrow {
+    color: var(--flame-400);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-size: var(--fs-xs);
+    margin-bottom: 0.6rem;
+  }
+  .archive__head { margin-bottom: 2.5rem; }
+  .archive__head h1 { font-size: var(--fs-3xl); margin-bottom: 0.4rem; }
+  .archive__count { color: var(--ink-muted); font-size: var(--fs-sm); margin: 0; }
+  .archive__group + .archive__group { margin-top: 3rem; }
+  .archive__month {
+    font-size: var(--fs-lg);
+    color: var(--ink-muted);
+    margin: 0 0 1.1rem;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  .archive__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 720px) {
+    .archive__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

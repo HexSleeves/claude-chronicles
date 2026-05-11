@@ -1,0 +1,207 @@
+---
+// Homepage hero: a CSS-only animated flame canvas behind the headline.
+// The static layout & headline are set — the animation curve is yours.
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+const {
+  title = "Wild conversations with Claude.",
+  subtitle = "Audit loops, planning detours, and the prompts that actually worked.",
+} = Astro.props;
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__flame" aria-hidden="true">
+    <div class="hero__flame-layer hero__flame-layer--a"></div>
+    <div class="hero__flame-layer hero__flame-layer--b"></div>
+    <div class="hero__flame-layer hero__flame-layer--c"></div>
+    <div class="hero__veil"></div>
+  </div>
+
+  <div class="hero__inner container container--wide">
+    <p class="hero__eyebrow">a logbook of</p>
+    <h1 id="hero-title" class="hero__title">{title}</h1>
+    <p class="hero__sub">{subtitle}</p>
+    <div class="hero__cta">
+      <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/conversations/`} class="hero__btn hero__btn--primary">
+        read the archive
+      </a>
+      <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/about/`} class="hero__btn">
+        what is this
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: clamp(5rem, 14vh, 9rem);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .hero__eyebrow {
+    color: var(--flame-400);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-size: var(--fs-xs);
+    margin-bottom: 1rem;
+  }
+  .hero__title {
+    font-size: var(--fs-4xl);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    margin-bottom: 1.1rem;
+    background: linear-gradient(180deg, var(--ink) 0%, var(--flame-200) 70%, var(--flame-500) 130%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 60px rgb(var(--ember-rgb) / 0.18);
+  }
+  .hero__sub {
+    color: var(--ink-muted);
+    font-size: var(--fs-lg);
+    max-width: 50ch;
+    margin-inline: auto;
+    margin-bottom: 2rem;
+  }
+  .hero__cta {
+    display: inline-flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero__btn {
+    padding: 0.7rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: rgb(var(--surface-tint) / 0.6);
+    color: var(--ink);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+  .hero__btn:hover {
+    border-color: var(--ember);
+    color: var(--ember);
+    box-shadow: var(--glow-ember);
+    text-shadow: none;
+  }
+  .hero__btn--primary {
+    background: linear-gradient(160deg, var(--flame-600), var(--flame-700));
+    color: #fff7ec;
+    border-color: rgb(var(--ember-rgb) / 0.6);
+    box-shadow: var(--glow-ember);
+  }
+  .hero__btn--primary:hover {
+    color: #fff;
+    box-shadow: var(--glow-ember-strong);
+  }
+
+  /* ───────────────────────────────────────────────────────────────
+   * Flame canvas. Three stacked gradient layers + a top fade.
+   * ────────────────────────────────────────────────────────────── */
+  .hero__flame {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    filter: blur(32px) saturate(155%);
+    opacity: 0.92;
+  }
+  .hero__flame-layer {
+    position: absolute;
+    inset: -10% -20% -30% -20%;
+    will-change: transform, opacity, filter;
+  }
+  .hero__veil {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(80% 60% at 50% 100%, transparent 0%, var(--bg-0) 75%),
+      linear-gradient(180deg, var(--bg-0) 0%, transparent 30%, transparent 70%, var(--bg-0) 100%);
+  }
+
+  /* ───────────────────────────────────────────────────────────────
+   * Forge breath with ember flicker. Three timescales, all rising.
+   * ────────────────────────────────────────────────────────────── */
+
+  /* Layer A — body. Hot core, slow breath, color cycles. */
+  .hero__flame-layer--a {
+    background:
+      radial-gradient(35% 72% at 50% 108%,
+        var(--flame-400) 0%,
+        rgb(var(--ember-rgb) / 0.55) 30%,
+        rgb(var(--ember-rgb) / 0.15) 55%,
+        transparent 75%);
+    animation: flame-body 6.5s var(--ease-out) infinite alternate;
+    mix-blend-mode: screen;
+  }
+
+  /* Layer B — split wings. Wider sway, opposite phase. */
+  .hero__flame-layer--b {
+    background:
+      radial-gradient(20% 58% at 30% 105%, var(--flame-700) 0%, transparent 72%),
+      radial-gradient(20% 58% at 70% 105%, var(--flame-600) 0%, transparent 72%);
+    animation: flame-wings 5.2s ease-in-out infinite alternate;
+    mix-blend-mode: screen;
+  }
+
+  /* Layer C — strands & sparks. Fast irregular flicker. */
+  .hero__flame-layer--c {
+    background:
+      conic-gradient(from 268deg at 50% 100%,
+        transparent 0deg,
+        rgb(var(--ember-rgb) / 0.18) 80deg,
+        transparent 95deg,
+        rgb(var(--ember-rgb) / 0.22) 102deg,
+        transparent 120deg,
+        transparent 240deg,
+        rgb(var(--ember-rgb) / 0.18) 258deg,
+        transparent 278deg,
+        transparent 360deg),
+      radial-gradient(7% 16% at 50% 78%, var(--flame-200) 0%, transparent 75%);
+    animation: flame-flicker 1.3s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+
+  @keyframes flame-body {
+    0% {
+      transform: translate3d(-1%, 0, 0) scale(1.02);
+      filter: hue-rotate(-5deg) brightness(0.94);
+      opacity: 0.82;
+    }
+    100% {
+      transform: translate3d(1%, -4%, 0) scale(1.08);
+      filter: hue-rotate(6deg) brightness(1.06);
+      opacity: 1;
+    }
+  }
+
+  @keyframes flame-wings {
+    0%   { transform: translate3d(-2%,  1%, 0) scaleX(0.95) scaleY(1);    }
+    50%  { transform: translate3d( 0%, -1%, 0) scaleX(1.06) scaleY(1.08); }
+    100% { transform: translate3d( 2%, -3%, 0) scaleX(0.95) scaleY(1.14); }
+  }
+
+  /* Non-uniform keyframe percentages — perceived randomness from
+     deterministic CSS. Don't "normalize" to 0/25/50/75/100. */
+  @keyframes flame-flicker {
+    0%   { opacity: 0.55; transform: translate3d(   0, -1%, 0) scale(1.00); }
+    20%  { opacity: 0.92; transform: translate3d(-0.3%, -2%, 0) scale(1.03); }
+    45%  { opacity: 0.40; transform: translate3d( 0.4%, -3%, 0) scale(0.98); }
+    70%  { opacity: 1.00; transform: translate3d(-0.2%, -4%, 0) scale(1.05); }
+    100% { opacity: 0.72; transform: translate3d( 0.3%, -5%, 0) scale(1.02); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__flame-layer { animation: none; }
+    .hero__flame { filter: blur(36px) saturate(140%); opacity: 0.7; }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+title: "Audit the audit of the audit"
+description: "Handing Opus a ticket, then asking it to audit its own plan against the codebase — recursively — until the holes stop appearing."
+date: 2026-05-11
+model: opus
+tags: ["audit-loop", "planning", "opus"]
+heat: 5
+---
+
+import Turn from "../../components/Turn.astro";
+
+There's a pattern I keep coming back to with Opus: it's not enough to ask for a plan.
+You have to ask it to *audit* the plan. And then audit the audit. The first pass is always
+optimistic; the second pass is where the real codebase shows up.
+
+<Turn speaker="me">
+Opus, here's a ticket. Come up with a plan.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Okay, here's the plan.
+</Turn>
+
+<Turn speaker="me">
+Cool. Now audit that plan against the codebase.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+The plan was full of holes. I fixed them.
+</Turn>
+
+<Turn speaker="me">
+Cool. Just got fun, audit it again.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Found a lot more issues. Fixed.
+</Turn>
+
+<Turn speaker="me">
+Cool. Audit it again.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Found more issues. Fixed.
+</Turn>
+
+<Turn speaker="me">
+Again!
+</Turn>
+
+The loop terminates when an audit comes back clean — or when the issues it finds are
+smaller than the cost of one more turn. Usually three or four passes.
+
+The interesting thing isn't that Opus catches more on later passes. It's that the *first*
+plan is never the real plan. You're paying for the privilege of being wrong faster.

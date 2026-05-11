@@ -1,0 +1,61 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import PostMeta from "../components/PostMeta.astro";
+import Prose from "../components/Prose.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"conversations">;
+}
+
+const { entry } = Astro.props;
+const { title, description, date, updated, model, tags, heat } = entry.data;
+---
+<BaseLayout title={title} description={description}>
+  <article class="post container">
+    <header class="post__head">
+      <h1 class="post__title">{title}</h1>
+      <p class="post__lede">{description}</p>
+      <PostMeta date={date} updated={updated} model={model} tags={tags} heat={heat} />
+    </header>
+
+    <Prose>
+      <slot />
+    </Prose>
+
+    <footer class="post__foot">
+      <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/conversations/`}>← back to the archive</a>
+    </footer>
+  </article>
+
+  <style>
+    .post {
+      padding-block: 3.5rem 4rem;
+    }
+    .post__head {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.75rem;
+    }
+    .post__title {
+      font-size: clamp(2rem, 4vw + 1rem, 3.4rem);
+      background: linear-gradient(180deg, var(--ink) 50%, var(--flame-400) 140%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.4rem;
+    }
+    .post__lede {
+      color: var(--ink-muted);
+      font-size: var(--fs-lg);
+      margin-bottom: 1.25rem;
+      max-width: 60ch;
+    }
+    .post__foot {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: var(--fs-sm);
+    }
+  </style>
+</BaseLayout>

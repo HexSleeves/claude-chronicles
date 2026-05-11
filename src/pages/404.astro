@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<BaseLayout title="404 — burned to ash" description="Nothing at this path." noIndex>
+  <section class="lost container container--wide">
+    <p class="lost__num">404</p>
+    <h1 class="lost__title">Burned to ash.</h1>
+    <p class="lost__lede">Whatever was here, the fire already took it.</p>
+    <div class="lost__cta">
+      <a class="lost__btn" href={`${base}/`}>back to the fire</a>
+      <a class="lost__btn" href={`${base}/conversations/`}>browse the archive</a>
+    </div>
+  </section>
+
+  <style>
+    .lost {
+      text-align: center;
+      padding-block: 6rem 8rem;
+    }
+    .lost__num {
+      font-family: var(--font-mono);
+      font-size: clamp(4rem, 14vw, 9rem);
+      line-height: 1;
+      margin: 0 0 1rem;
+      background: linear-gradient(180deg, var(--flame-400), var(--flame-900));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 80px rgb(var(--ember-rgb) / 0.4);
+    }
+    .lost__title { font-size: var(--fs-3xl); margin-bottom: 0.5rem; }
+    .lost__lede { color: var(--ink-muted); margin-bottom: 2rem; }
+    .lost__cta {
+      display: inline-flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .lost__btn {
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      color: var(--ink);
+    }
+    .lost__btn:hover {
+      border-color: var(--ember);
+      color: var(--ember);
+      box-shadow: var(--glow-ember);
+    }
+  </style>
+</BaseLayout>

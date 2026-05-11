@@ -1,0 +1,59 @@
+---
+// Scoped typography for rendered MDX content. Wrap a <slot /> with this in
+// any page or layout where article-style prose appears.
+---
+<div class="prose">
+  <slot />
+</div>
+
+<style>
+  .prose {
+    max-width: var(--measure);
+    margin-inline: auto;
+    color: var(--ink);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-body);
+  }
+  .prose > :global(*) {
+    max-width: var(--measure);
+  }
+  /* let custom turn cards & wide media break out */
+  .prose > :global(.turn),
+  .prose > :global(figure.wide),
+  .prose > :global(.wide) {
+    max-width: 78ch;
+  }
+  .prose :global(h2) {
+    margin-top: 2.25em;
+    font-size: var(--fs-2xl);
+    color: var(--ink);
+  }
+  .prose :global(h2)::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-bottom: 0.6rem;
+    background: linear-gradient(90deg, var(--flame-700), var(--flame-400));
+    border-radius: 2px;
+  }
+  .prose :global(h3) {
+    margin-top: 1.8em;
+    color: var(--ink);
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.4em;
+  }
+  .prose :global(li) {
+    margin-block: 0.35em;
+  }
+  .prose :global(li)::marker {
+    color: var(--flame-600);
+  }
+  .prose :global(img) {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    margin-block: 1.5rem;
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Prose from "../components/Prose.astro";
+---
+<BaseLayout title="about" description="What this site is, and how it gets written.">
+  <article class="about container">
+    <header class="about__head">
+      <p class="about__eyebrow">about</p>
+      <h1>What this is</h1>
+    </header>
+
+    <Prose>
+      <p>
+        Claude is a very smart pair. This is a logbook of the conversations
+        worth keeping — the ones where the audit loop got interesting, where
+        the wrong plan taught me something the right one wouldn't have, where
+        a single re-prompt rewrote the whole architecture.
+      </p>
+
+      <p>
+        Most entries follow a chat-by-chat format. Lines from me look one way;
+        lines from Claude look another. The point isn't the dialogue — it's
+        the pattern of moves that worked.
+      </p>
+
+      <h2>How it's built</h2>
+      <p>
+        Astro + MDX, deployed to GitHub Pages. The source lives at
+        <a href="https://github.com/HexSleeves/claude-chronicles">github.com/HexSleeves/claude-chronicles</a>.
+      </p>
+
+      <h2>Subscribe</h2>
+      <p>
+        <a href={`${import.meta.env.BASE_URL.replace(/\/$/, "")}/rss.xml`}>RSS</a> — last 20 posts, full content.
+      </p>
+    </Prose>
+  </article>
+
+  <style>
+    .about { padding-block: 3.5rem 6rem; }
+    .about__eyebrow {
+      color: var(--flame-400);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-size: var(--fs-xs);
+      margin-bottom: 0.6rem;
+    }
+    .about__head { margin-bottom: 2.5rem; }
+    .about__head h1 { font-size: var(--fs-3xl); margin: 0; }
+  </style>
+</BaseLayout>

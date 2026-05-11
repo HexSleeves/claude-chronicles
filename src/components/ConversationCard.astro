@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"conversations">;
+}
+
+const { entry } = Astro.props;
+const { title, description, date, tags, heat, model } = entry.data;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const href = `${base}/conversations/${entry.id.replace(/\.mdx$/, "")}/`;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+<a class="card" href={href} data-heat={heat}>
+  <header class="card__head">
+    <time class="card__date" datetime={date.toISOString()}>{fmt(date)}</time>
+    <span class="card__model">{model}</span>
+  </header>
+  <h3 class="card__title">{title}</h3>
+  <p class="card__desc">{description}</p>
+  <footer class="card__foot">
+    {tags.slice(0, 3).map((t) => <span class="card__tag">#{t}</span>)}
+    <span class="card__arrow" aria-hidden="true">→</span>
+  </footer>
+
+  <style>
+    .card {
+      display: block;
+      padding: 1.4rem 1.5rem;
+      border-radius: var(--radius-md);
+      background: rgb(var(--surface-tint) / 0.5);
+      border: 1px solid var(--border);
+      color: inherit;
+      border-bottom-width: 1px;
+      transition: transform var(--dur-fast) var(--ease-out),
+                  box-shadow var(--dur-med) var(--ease-out),
+                  border-color var(--dur-fast) var(--ease-out);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--flame-700), var(--flame-400), var(--flame-700));
+      opacity: 0;
+      transform: scaleX(0.6);
+      transform-origin: left;
+      transition: opacity var(--dur-med) var(--ease-out),
+                  transform var(--dur-med) var(--ease-out);
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgb(var(--ember-rgb) / 0.5);
+      box-shadow: var(--glow-ember);
+    }
+    .card:hover::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .card__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-dim);
+      margin-bottom: 0.6rem;
+    }
+    .card__model {
+      font-family: var(--font-mono);
+      color: var(--flame-400);
+    }
+    .card__title {
+      font-size: var(--fs-xl);
+      color: var(--ink);
+      margin: 0 0 0.35rem;
+    }
+    .card__desc {
+      color: var(--ink-muted);
+      font-size: var(--fs-sm);
+      margin: 0 0 1rem;
+    }
+    .card__foot {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      font-size: var(--fs-xs);
+      color: var(--ink-dim);
+    }
+    .card__tag {
+      padding: 0.05em 0.5em;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+    .card__arrow {
+      margin-left: auto;
+      color: var(--ember);
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+    .card:hover .card__arrow {
+      transform: translateX(3px);
+    }
+  </style>
+</a>

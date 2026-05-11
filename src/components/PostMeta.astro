@@ -1,0 +1,170 @@
+---
+interface Props {
+  date: Date;
+  updated?: Date;
+  model?: string;
+  tags?: string[];
+  heat?: number; // 1..5
+}
+const { date, updated, model, tags = [], heat = 3 } = Astro.props;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<dl class="meta">
+  <div class="meta__row">
+    <dt>Logged</dt>
+    <dd>
+      <time datetime={date.toISOString()}>{fmt(date)}</time>
+      {updated && (
+        <span class="meta__updated">
+          · updated <time datetime={updated.toISOString()}>{fmt(updated)}</time>
+        </span>
+      )}
+    </dd>
+  </div>
+
+  {model && (
+    <div class="meta__row">
+      <dt>Model</dt>
+      <dd><code>{model}</code></dd>
+    </div>
+  )}
+
+  {tags.length > 0 && (
+    <div class="meta__row">
+      <dt>Tags</dt>
+      <dd class="meta__tags">
+        {tags.map((t) => (
+          <a class="tag" href={`${base}/tags/${t}/`}>#{t}</a>
+        ))}
+      </dd>
+    </div>
+  )}
+
+  <div class="meta__row">
+    <dt>Heat</dt>
+    <dd>
+      <span class="heat" data-heat={heat} aria-label={`Heat ${heat} of 5: ${["smoldering","warm","hot","blazing","inferno"][heat - 1]}`}>
+        <svg class="heat__row" width="80" height="14" viewBox="0 0 80 14" aria-hidden="true">
+          <defs>
+            <linearGradient id="heat-grad" x1="0" y1="0" x2="0" y2="14" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="var(--flame-200)" />
+              <stop offset="55%" stop-color="var(--flame-500)" />
+              <stop offset="100%" stop-color="var(--flame-700)" />
+            </linearGradient>
+            <symbol id="heat-pip" viewBox="0 0 12 14">
+              <path d="M6 1c1 2-.7 3.3-.7 4.9 0 1 .7 1.6 1.5 1.6.9 0 1.4-.6 1.4-1.4 0-.4-.1-.8-.3-1.2C9.7 5.9 10.8 7.5 10.8 9.4c0 2.3-1.8 3.7-4.1 3.7s-4.1-1.4-4.1-3.7C2.6 7.1 4.5 4.8 6 1z"/>
+            </symbol>
+          </defs>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <use
+              href="#heat-pip"
+              x={i * 16}
+              y="0"
+              class={`heat__pip ${i < heat ? "heat__pip--on" : ""}`}
+            />
+          ))}
+        </svg>
+        <span class="heat__word" data-level={heat}>
+          {["smoldering","warm","hot","blazing","inferno"][heat - 1]}
+        </span>
+      </span>
+    </dd>
+  </div>
+</dl>
+
+<style>
+  .meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 1.1rem;
+    row-gap: 0.4rem;
+    font-size: var(--fs-sm);
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .meta__row { display: contents; }
+  .meta dt {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: var(--fs-xs);
+    color: var(--ink-dim);
+    padding-top: 0.15em;
+  }
+  .meta dd { margin: 0; }
+  .meta__updated { color: var(--ink-dim); margin-left: 0.35rem; }
+
+  .meta__tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tag {
+    border: 1px solid var(--border);
+    border-bottom-width: 1px;
+    background: rgb(var(--surface-tint) / 0.5);
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    color: var(--ink-muted);
+    font-size: var(--fs-xs);
+  }
+  .tag:hover {
+    color: var(--ember);
+    border-color: var(--ember);
+  }
+
+  .heat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    line-height: 1;
+  }
+  .heat__row {
+    display: block;
+    overflow: visible; /* let the glow escape the viewBox */
+  }
+  .heat__pip {
+    fill: none;
+    stroke: var(--ink-dim);
+    stroke-width: 0.9;
+    opacity: 0.55;
+    transform-origin: center bottom;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .heat__pip--on {
+    fill: url(#heat-grad);
+    stroke: none;
+    opacity: 1;
+    filter: drop-shadow(0 0 3px rgb(var(--ember-rgb) / 0.7));
+  }
+  /* Reserve the flicker for inferno-only. */
+  .heat[data-heat="5"] .heat__pip--on {
+    animation: heat-flicker 1.4s ease-in-out infinite;
+  }
+  .heat[data-heat="5"] .heat__pip--on:nth-child(2) { animation-delay: -0.3s; }
+  .heat[data-heat="5"] .heat__pip--on:nth-child(3) { animation-delay: -0.6s; }
+  .heat[data-heat="5"] .heat__pip--on:nth-child(4) { animation-delay: -0.9s; }
+  .heat[data-heat="5"] .heat__pip--on:nth-child(5) { animation-delay: -1.2s; }
+  @keyframes heat-flicker {
+    0%, 100% { opacity: 1;    transform: translateY(0)     scaleY(1);    }
+    45%      { opacity: 0.82; transform: translateY(-0.5px) scaleY(1.05); }
+    70%      { opacity: 0.95; transform: translateY(-1px)   scaleY(0.96); }
+  }
+
+  .heat__word {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ink-dim);
+  }
+  .heat__word[data-level="3"] { color: var(--flame-400); }
+  .heat__word[data-level="4"] {
+    color: var(--flame-500);
+    text-shadow: 0 0 8px rgb(var(--ember-rgb) / 0.4);
+  }
+  .heat__word[data-level="5"] {
+    color: var(--flame-200);
+    text-shadow: 0 0 10px rgb(var(--ember-rgb) / 0.7);
+    font-weight: 600;
+  }
+</style>

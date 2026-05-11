@@ -1,0 +1,68 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FlameHero from "../components/FlameHero.astro";
+import ConversationCard from "../components/ConversationCard.astro";
+
+const all = await getCollection("conversations", ({ data }) => !data.draft);
+const recent = all
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<BaseLayout title="claude chronicles" description="A blog of wild conversations with Claude.">
+  <FlameHero />
+
+  <section class="recent container container--wide">
+    <header class="recent__head">
+      <h2>Latest from the fire</h2>
+      <a class="recent__all" href={`${base}/conversations/`}>full archive →</a>
+    </header>
+
+    {recent.length === 0 ? (
+      <p class="recent__empty">No conversations yet. The kindling is dry.</p>
+    ) : (
+      <div class="recent__grid">
+        {recent.map((entry) => <ConversationCard entry={entry} />)}
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .recent {
+    padding-block: 4rem 6rem;
+  }
+  .recent__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .recent__head h2 {
+    margin: 0;
+    font-size: var(--fs-2xl);
+  }
+  .recent__all {
+    font-size: var(--fs-sm);
+    color: var(--ember);
+  }
+  .recent__empty {
+    color: var(--ink-muted);
+    text-align: center;
+    padding: 3rem 0;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+  }
+  .recent__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  @media (min-width: 720px) {
+    .recent__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
