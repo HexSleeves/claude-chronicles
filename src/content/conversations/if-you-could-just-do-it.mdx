@@ -1,0 +1,34 @@
+---
+title: "If you could just do it"
+description: "Claude offered to set up a slash command, then offered to skip the slash command. A small accidental lesson about what commands are for."
+date: 2026-05-11
+model: opus
+tags: ["meta", "slash-commands", "agent-ux"]
+heat: 3
+---
+
+import Turn from "../../components/Turn.astro";
+
+I told it something like —
+
+<Turn speaker="me">
+I want you to do this list of things anytime I say do x.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Okay.
+</Turn>
+
+It set up a command. Then —
+
+<Turn speaker="me">
+Okay, let's test it. Do x.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+You have to run the command by typing `/x` in the prompt. But I know what you want me to do so I'll do it.
+</Turn>
+
+And in my head:
+
+> If you could just do it, why do I need to type `/x`?
