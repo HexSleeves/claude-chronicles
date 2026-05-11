@@ -1,0 +1,28 @@
+---
+title: "wrong prompt but okay"
+description: "I typed a bash command into the chat instead of the terminal. The mortifying part isn't the typo — it's that this happens often enough that the model handles it gracefully."
+date: 2026-05-11
+model: opus
+tags: ["papercuts", "agent-ux"]
+heat: 2
+---
+
+import Turn from "../../components/Turn.astro";
+
+Dude. I hope no one ever reads my Claude conversations.
+
+<Turn speaker="me">
+Opus, what does this error mean?
+</Turn>
+
+<Turn speaker="claude" model="opus">
+You didn't run `npm install`.
+</Turn>
+
+<Turn speaker="me">
+npm install
+</Turn>
+
+<Turn speaker="claude" model="opus">
+…wrong prompt, but okay. Let me do that for you.
+</Turn>
