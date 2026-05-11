@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,8 +13,10 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  # PRs key by number (cancel old runs on new pushes to the PR).
+  # Main pushes key by ref (do NOT cancel — protect in-flight deploys).
+  group: pages-${{ github.event.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -27,6 +31,8 @@ jobs:
           node-version: 22
 
   deploy:
+    # Only deploy when pushing to main; PRs run build-only.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:

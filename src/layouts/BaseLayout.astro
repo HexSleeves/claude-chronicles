@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import FlameMark from "../components/FlameMark.astro";
+import GitHubMark from "../components/GitHubMark.astro";
 
 interface Props {
   title: string;
@@ -67,6 +68,16 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
           <a href={`${base}/conversations/`}>Archive</a>
           <a href={`${base}/about/`}>About</a>
           <a href={`${base}/rss.xml`} rel="alternate" type="application/rss+xml">RSS</a>
+          <a
+            class="nav__icon"
+            href="https://github.com/HexSleeves/claude-chronicles"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Source on GitHub"
+            title="Source on GitHub"
+          >
+            <GitHubMark size={20} decorative />
+          </a>
         </nav>
       </div>
     </header>
@@ -146,6 +157,20 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
       .nav a:focus-visible {
         outline: 2px solid var(--ember);
         outline-offset: 2px;
+      }
+      .nav__icon {
+        /* square tap target instead of text-pill */
+        width: 44px;
+        min-height: 44px;
+        padding-inline: 0;
+        color: var(--ink-muted);
+      }
+      .nav__icon svg {
+        transition: filter var(--dur-fast) var(--ease-out);
+      }
+      .nav__icon:hover svg,
+      .nav__icon:focus-visible svg {
+        filter: drop-shadow(0 0 6px rgb(var(--ember-rgb) / 0.6));
       }
 
       @media (min-width: 26em) {
