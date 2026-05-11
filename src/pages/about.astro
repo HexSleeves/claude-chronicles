@@ -37,16 +37,25 @@ import Prose from "../components/Prose.astro";
   </article>
 
   <style>
-    .about { padding-block: 3.5rem 6rem; }
+    .about { padding-block: 2rem 4rem; }
     .about__eyebrow {
       color: var(--flame-400);
       font-family: var(--font-mono);
       text-transform: uppercase;
-      letter-spacing: 0.32em;
+      letter-spacing: 0.28em;
       font-size: var(--fs-xs);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
     }
-    .about__head { margin-bottom: 2.5rem; }
-    .about__head h1 { font-size: var(--fs-3xl); margin: 0; }
+    .about__head { margin-bottom: 1.75rem; }
+    .about__head h1 {
+      font-size: clamp(1.85rem, 6vw + 0.4rem, 2.5rem);
+      line-height: 1.1;
+      margin: 0;
+    }
+    @media (min-width: 40em) {
+      .about { padding-block: 3.5rem 6rem; }
+      .about__head { margin-bottom: 2.5rem; }
+      .about__head h1 { font-size: var(--fs-3xl); }
+    }
   </style>
 </BaseLayout>

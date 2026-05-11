@@ -80,8 +80,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .meta {
     display: grid;
     grid-template-columns: max-content 1fr;
-    column-gap: 1.1rem;
-    row-gap: 0.4rem;
+    column-gap: 0.9rem;
+    row-gap: 0.5rem;
     font-size: var(--fs-sm);
     color: var(--ink-muted);
     margin: 0;
@@ -89,27 +89,38 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .meta__row { display: contents; }
   .meta dt {
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     font-size: var(--fs-xs);
     color: var(--ink-dim);
-    padding-top: 0.15em;
+    padding-top: 0.3em;
   }
-  .meta dd { margin: 0; }
+  .meta dd { margin: 0; min-width: 0; }
   .meta__updated { color: var(--ink-dim); margin-left: 0.35rem; }
 
-  .meta__tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .meta__tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
   .tag {
     border: 1px solid var(--border);
-    border-bottom-width: 1px;
     background: rgb(var(--surface-tint) / 0.5);
-    padding: 0.1rem 0.55rem;
+    /* taller tap-target on mobile (~32px touchable) */
+    padding: 0.4rem 0.7rem;
     border-radius: 999px;
     color: var(--ink-muted);
     font-size: var(--fs-xs);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
   }
   .tag:hover {
     color: var(--ember);
     border-color: var(--ember);
+  }
+  .tag:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 2px;
+  }
+  @media (min-width: 40em) {
+    .meta { column-gap: 1.1rem; }
+    .tag { padding: 0.15rem 0.6rem; }
   }
 
   .heat {

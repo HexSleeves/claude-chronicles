@@ -25,14 +25,20 @@ const who = label ?? (speaker === "me" ? "Me" : "Claude");
 <style>
   /* Shared turn chrome — safe defaults that look fine out of the box. */
   .turn {
-    margin-block: 1.4rem;
-    padding: 1rem 1.15rem 0.6rem;
+    margin-block: 1.1rem;
+    padding: 0.85rem 0.9rem 0.5rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
     background: rgb(var(--surface-tint) / 0.55);
     position: relative;
     transition: transform var(--dur-fast) var(--ease-out),
                 box-shadow var(--dur-med) var(--ease-out);
+  }
+  @media (min-width: 40em) {
+    .turn {
+      margin-block: 1.4rem;
+      padding: 1rem 1.15rem 0.6rem;
+    }
   }
   .turn__head {
     display: flex;

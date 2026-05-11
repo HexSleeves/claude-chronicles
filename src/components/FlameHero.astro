@@ -38,7 +38,7 @@ const {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding-block: clamp(5rem, 14vh, 9rem);
+    padding-block: clamp(3rem, 10vh, 5rem);
     border-bottom: 1px solid var(--border);
   }
   .hero__inner {
@@ -50,15 +50,15 @@ const {
     color: var(--flame-400);
     font-family: var(--font-mono);
     text-transform: uppercase;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.28em;
     font-size: var(--fs-xs);
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
   }
   .hero__title {
-    font-size: var(--fs-4xl);
-    line-height: 1;
+    font-size: clamp(2.25rem, 8vw + 0.5rem, 5rem);
+    line-height: 1.02;
     letter-spacing: -0.035em;
-    margin-bottom: 1.1rem;
+    margin-bottom: 0.9rem;
     background: linear-gradient(180deg, var(--ink) 0%, var(--flame-200) 70%, var(--flame-500) 130%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -67,19 +67,24 @@ const {
   }
   .hero__sub {
     color: var(--ink-muted);
-    font-size: var(--fs-lg);
+    font-size: var(--fs-base);
     max-width: 50ch;
     margin-inline: auto;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
   .hero__cta {
     display: inline-flex;
-    gap: 0.7rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
   .hero__btn {
-    padding: 0.7rem 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.55rem 1.1rem;
     border-radius: 999px;
     border: 1px solid var(--border-strong);
     background: rgb(var(--surface-tint) / 0.6);
@@ -94,6 +99,10 @@ const {
     box-shadow: var(--glow-ember);
     text-shadow: none;
   }
+  .hero__btn:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 2px;
+  }
   .hero__btn--primary {
     background: linear-gradient(160deg, var(--flame-600), var(--flame-700));
     color: #fff7ec;
@@ -105,6 +114,13 @@ const {
     box-shadow: var(--glow-ember-strong);
   }
 
+  @media (min-width: 40em) {
+    .hero { padding-block: clamp(5rem, 14vh, 9rem); }
+    .hero__sub { font-size: var(--fs-lg); margin-bottom: 2rem; }
+    .hero__eyebrow { letter-spacing: 0.32em; margin-bottom: 1rem; }
+    .hero__cta { gap: 0.7rem; width: auto; }
+  }
+
   /* ───────────────────────────────────────────────────────────────
    * Flame canvas. Three stacked gradient layers + a top fade.
    * ────────────────────────────────────────────────────────────── */
@@ -112,8 +128,12 @@ const {
     position: absolute;
     inset: 0;
     z-index: 1;
-    filter: blur(32px) saturate(155%);
-    opacity: 0.92;
+    /* Lighter blur on mobile to save GPU; restored at 40em. */
+    filter: blur(20px) saturate(140%);
+    opacity: 0.88;
+  }
+  @media (min-width: 40em) {
+    .hero__flame { filter: blur(32px) saturate(155%); opacity: 0.92; }
   }
   .hero__flame-layer {
     position: absolute;

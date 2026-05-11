@@ -58,8 +58,10 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
     <header class="site-header">
       <div class="site-header__inner container container--wide">
         <a class="brand" href={`${base}/`}>
-          <FlameMark size={28} />
-          <span class="brand__name">claude<span class="brand__dot">.</span>chronicles</span>
+          <FlameMark size={26} />
+          <span class="brand__name">
+            <span class="brand__claude">claude</span><span class="brand__dot">.</span>chronicles
+          </span>
         </a>
         <nav class="nav" aria-label="Primary">
           <a href={`${base}/conversations/`}>Archive</a>
@@ -86,62 +88,113 @@ const ogImageUrl = new URL(ogImage ?? `${base}/og-default.png`, Astro.site).toSt
     </footer>
 
     <style>
+      /* ── Site header ────────────────────────────────────────── */
       .site-header {
         position: sticky;
         top: 0;
         z-index: 10;
-        backdrop-filter: blur(12px) saturate(140%);
-        background: rgb(10 10 12 / 0.62);
+        /* Lighter backdrop on mobile — blur is the most expensive
+           single CSS effect on Android. Upgraded at 40em+. */
+        backdrop-filter: blur(8px);
+        background: rgb(10 10 12 / 0.78);
         border-bottom: 1px solid var(--border);
       }
       .site-header__inner {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-block: 0.85rem;
+        flex-wrap: wrap;
+        gap: 0.25rem 1rem;
+        padding-block: 0.4rem;
       }
       .brand {
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.55rem;
         color: var(--ink);
         border: none;
         font-weight: 600;
         letter-spacing: -0.01em;
+        min-height: 44px;       /* tap-target */
+        padding-inline: 2px;
       }
-      .brand:hover { color: var(--ember); text-shadow: 0 0 12px rgb(var(--ember-rgb) / 0.7); }
-      .brand__name { font-size: 1rem; }
+      .brand:hover {
+        color: var(--ember);
+        text-shadow: 0 0 12px rgb(var(--ember-rgb) / 0.7);
+      }
+      .brand__name { font-size: 0.95rem; }
+      .brand__claude { display: none; }       /* "claude" prefix hidden on narrow viewports */
       .brand__dot { color: var(--ember); }
+
       .nav {
         display: flex;
-        gap: 1.25rem;
+        gap: 0.25rem;
         font-size: var(--fs-sm);
+        margin-inline-start: auto;       /* push to right when wrapping */
       }
       .nav a {
         color: var(--ink-muted);
         border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding-inline: 0.7rem;
+        border-radius: 8px;
       }
-      .nav a:hover { color: var(--ember); }
+      .nav a:hover { color: var(--ember); background: rgb(var(--ember-rgb) / 0.08); }
+      .nav a:focus-visible {
+        outline: 2px solid var(--ember);
+        outline-offset: 2px;
+      }
 
+      @media (min-width: 26em) {
+        .brand__claude { display: inline; }   /* full brand fits */
+      }
+      @media (min-width: 40em) {
+        .site-header__inner { padding-block: 0.6rem; }
+        .brand__name { font-size: 1rem; }
+        .nav { gap: 0.5rem; }
+        .nav a { padding-inline: 0.85rem; }
+        .site-header { backdrop-filter: blur(12px) saturate(140%); background: rgb(10 10 12 / 0.62); }
+      }
+
+      /* ── Site footer ────────────────────────────────────────── */
       .site-footer {
-        margin-top: 6rem;
-        padding-block: 2rem;
+        margin-top: 4rem;
+        padding-block: 1.5rem;
         border-top: 1px solid var(--border);
         color: var(--ink-dim);
         font-size: var(--fs-sm);
+      }
+      .site-footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
       }
       .site-footer p {
         display: inline-flex;
         gap: 0.5rem;
         align-items: center;
         margin: 0;
-      }
-      .site-footer .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
+      }
+      .site-footer__src a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding-inline: 4px;
+      }
+      @media (min-width: 40em) {
+        .site-footer { margin-top: 6rem; padding-block: 2rem; }
+        .site-footer .container {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
       }
     </style>
   </body>

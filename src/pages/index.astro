@@ -32,23 +32,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 <style>
   .recent {
-    padding-block: 4rem 6rem;
+    padding-block: 2.5rem 4rem;
   }
   .recent__head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin-bottom: 2rem;
-    gap: 1rem;
+    margin-bottom: 1.5rem;
+    gap: 0.5rem 1rem;
     flex-wrap: wrap;
   }
   .recent__head h2 {
     margin: 0;
-    font-size: var(--fs-2xl);
+    font-size: var(--fs-xl);
   }
   .recent__all {
     font-size: var(--fs-sm);
     color: var(--ember);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
   .recent__empty {
     color: var(--ink-muted);
@@ -60,9 +63,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
   .recent__grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.1rem;
+    gap: 0.9rem;
   }
-  @media (min-width: 720px) {
+  @media (min-width: 40em) {
+    .recent { padding-block: 4rem 6rem; }
+    .recent__head { margin-bottom: 2rem; }
+    .recent__head h2 { font-size: var(--fs-2xl); }
+    .recent__grid { grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
+  }
+  @media (min-width: 60em) {
     .recent__grid { grid-template-columns: repeat(3, 1fr); }
   }
 </style>

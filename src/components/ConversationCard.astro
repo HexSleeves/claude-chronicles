@@ -28,7 +28,7 @@ const fmt = (d: Date) =>
   <style>
     .card {
       display: block;
-      padding: 1.4rem 1.5rem;
+      padding: 1.1rem 1.15rem;
       border-radius: var(--radius-md);
       background: rgb(var(--surface-tint) / 0.5);
       border: 1px solid var(--border);
@@ -39,6 +39,10 @@ const fmt = (d: Date) =>
                   border-color var(--dur-fast) var(--ease-out);
       position: relative;
       overflow: hidden;
+      min-height: 44px;
+    }
+    @media (min-width: 40em) {
+      .card { padding: 1.4rem 1.5rem; }
     }
     .card::after {
       content: "";
