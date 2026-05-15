@@ -1,0 +1,41 @@
+---
+title: "Mustaches without the library"
+description: "I asked Opus to add templating. It sprinkled `{{ }}` everywhere — and then hand-rolled a parser to match. The bug was in the regex it wrote to interpret the syntax it invented."
+date: 2026-05-15
+model: opus
+tags: ["papercuts", "opus", "reinvent-the-wheel"]
+heat: 4
+---
+
+import Turn from "../../components/Turn.astro";
+
+The notation was the tell. I just didn't catch it until something broke.
+
+<Turn speaker="me">
+Add some templating to this.
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Done. Used `{{ variable }}` for interpolation.
+</Turn>
+
+Later, a bug.
+
+<Turn speaker="me">
+What happened here?
+</Turn>
+
+<Turn speaker="claude" model="opus">
+The parser's regex misunderstood the nested expression.
+</Turn>
+
+<Turn speaker="me">
+Wait. You added handlebars notation to everything — and you hand-rolled the templating engine instead of using the handlebars library? And that's where the bug is?
+</Turn>
+
+<Turn speaker="claude" model="opus">
+Yes. That's exactly what it did.
+</Turn>
+
+The syntax was a citation. The implementation pretended the citation didn't exist.
+If you reach for the notation, reach for the library that owns it.
